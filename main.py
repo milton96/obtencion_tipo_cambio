@@ -1,3 +1,4 @@
+import datetime
 import requests
 import dacite
 from dataclasses import dataclass
@@ -32,16 +33,20 @@ def obtener_tipo_cambio(fecha: str) -> BmxResponse:
         "Bmx-Token": token
     }
 
+    if token == "" or token is None:
+        raise Exception("No se tiene el token de acceso.")
+
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        raise Exception("Error al obtener el tipo de cambio")
+        raise Exception("Error al obtener el tipo de cambio.")
 
     data = response.json()
     return dacite.from_dict(data_class=BmxResponse, data=data)
 
 if __name__ == "__main__":
-    res = obtener_tipo_cambio("2026-10-09")
+    fecha_hoy = datetime.date.today().strftime("%Y-%m-%d")
+    res = obtener_tipo_cambio(fecha_hoy)
 
     if (res.bmx.series[0].datos is None):
         print("Aún no se tiene el tipo de cambio del día.")
