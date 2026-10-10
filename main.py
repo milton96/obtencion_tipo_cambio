@@ -3,6 +3,7 @@ import requests
 import dacite
 from dataclasses import dataclass
 from typing import List, Optional
+from envs_config import obtener_env
 
 
 @dataclass
@@ -26,7 +27,7 @@ class BmxResponse:
 
 
 def obtener_tipo_cambio(fecha: str) -> BmxResponse:
-    token = ""
+    token = obtener_env("TOKEN")
     serie = "SF43718"
     url = f"https://www.banxico.org.mx/SieAPIRest/service/v1/series/{serie}/datos/{fecha}/{fecha}"
     headers = {
